@@ -1,0 +1,44 @@
+name: Generate yeast microbiome figures
+
+on:
+  push:
+    paths:
+      - "results/*.csv"
+      - "scripts/04_generate_yeast_figures.py"
+      - ".github/workflows/generate-figures.yml"
+  workflow_dispatch:
+
+jobs:
+  generate-figures:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas matplotlib openpyxl
+
+      - name: Generate figures
+        run: |
+          python scripts/04_generate_yeast_figures.py
+
+      - name: Check generated figures
+        run: |
+          test -f figures/honey_bee_yeast_prevalence_vs_response.png
+          test -f figures/honey_bee_yeast_differential_abundance.png
+
+      - name: Upload generated figures
+        uses: actions/upload-artifact@v4
+        with:
+          name: honey-bee-yeast-figures
+          path: |
+            figures/honey_bee_yeast_prevalence_vs_response.png
+            figures/honey_bee_yeast_differential_abundance.png
