@@ -86,7 +86,7 @@ The ITS1/ITS2 biological primer regions were inspected in the representative raw
 
 Approximate biological primer sequences detected were:
 
-- Forward ITS1: `GGCTTGGT CATTTAGAGGAAGTAA`
+- Forward ITS1: `GGCTTGGTCATTTAGAGGAAGTAA`
 - Reverse ITS2: `CGGCTGCGTTCTTCATCGATGC`
 
 The complete constructs and associated barcode/adapter sequences are documented separately in the supplementary data.
@@ -132,6 +132,7 @@ Examples include:
 The extracted differential-abundance summary is available in:
 
 `results/yeast_treatment_DA_summary_q05.csv`
+
 ## Key findings
 
 The analysis highlights several patterns in the yeast-associated component of the honey bee hindgut microbiome:
@@ -233,3 +234,4 @@ honey-bee-yeast-microbiome/
 ├── README.md
 ├── R_packages.txt
 └── requirements.txt
+```
