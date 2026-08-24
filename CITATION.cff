@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+title: "Honey Bee Hindgut Yeast Microbiome"
+message: "Bioinformatics and microbial-ecology analysis of publicly available ITS amplicon data from Apis mellifera hindgut samples."
+type: software
+authors:
+  - family-names: "Eskandari"
+    given-names: "Leila"
+version: "1.0.0"
+date-released: 2026-08-24
+repository-code: "https://github.com/USERNAME/honey-bee-yeast-microbiome"
+keywords:
+  - honey bee
+  - Apis mellifera
+  - yeast genomics
+  - microbial ecology
+  - mycobiome
+  - ITS amplicon sequencing
+  - DADA2
+  - bioinformatics
+  - microbiome

@@ -1,0 +1,8 @@
+dada2
+phyloseq
+microbiome
+vegan
+MaAsLin2
+zCompositions
+Biostrings
+ShortRead
