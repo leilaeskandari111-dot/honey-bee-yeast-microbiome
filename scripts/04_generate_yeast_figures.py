@@ -2,6 +2,7 @@
 # Generate reproducible figures for the honey-bee yeast microbiome project
 
 from pathlib import Path
+
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -20,6 +21,17 @@ FIG_DIR.mkdir(parents=True, exist_ok=True)
 
 
 # =========================================================
+# Input validation
+# =========================================================
+
+if not CORE_FILE.exists():
+    raise FileNotFoundError(f"Missing input file: {CORE_FILE}")
+
+if not DA_FILE.exists():
+    raise FileNotFoundError(f"Missing input file: {DA_FILE}")
+
+
+# =========================================================
 # Load data
 # =========================================================
 
@@ -28,6 +40,34 @@ da = pd.read_csv(DA_FILE)
 
 core.columns = core.columns.str.strip()
 da.columns = da.columns.str.strip()
+
+
+# Check required columns
+required_core = {"Genus", "Prevalence"}
+required_da = {
+    "Genus",
+    "significant_ASVs",
+    "max_abs_coef",
+    "best_q"
+}
+
+missing_core = required_core - set(core.columns)
+missing_da = required_da - set(da.columns)
+
+if missing_core:
+    raise ValueError(
+        f"Missing columns in core prevalence file: {missing_core}"
+    )
+
+if missing_da:
+    raise ValueError(
+        f"Missing columns in differential-abundance file: {missing_da}"
+    )
+
+
+# =========================================================
+# Data cleaning
+# =========================================================
 
 core["Prevalence"] = pd.to_numeric(
     core["Prevalence"],
@@ -55,16 +95,14 @@ da["best_q"] = pd.to_numeric(
 # Yeast prevalence versus treatment responsiveness
 # =========================================================
 
-# One prevalence value per genus:
-# use the highest prevalence among ASVs belonging to that genus.
-
+# Use the highest prevalence among ASVs belonging to each genus.
 genus_prevalence = (
     core.dropna(subset=["Genus", "Prevalence"])
     .groupby("Genus", as_index=False)["Prevalence"]
     .max()
 )
 
-# Merge with treatment-response summary
+# Merge prevalence information with treatment-response summary.
 plot1 = genus_prevalence.merge(
     da[
         [
@@ -84,7 +122,8 @@ plot1["significant_ASVs"] = plot1[
 plot1 = plot1.sort_values(
     ["Prevalence", "significant_ASVs"],
     ascending=[False, False]
-)
+).reset_index(drop=True)
+
 
 fig, ax = plt.subplots(figsize=(10, 7))
 
@@ -95,6 +134,7 @@ ax.scatter(
     alpha=0.85
 )
 
+
 # 75% prevalence threshold
 ax.axvline(
     75,
@@ -103,17 +143,18 @@ ax.axvline(
     label="75% prevalence threshold"
 )
 
+
 # Label points
-for i, row in plot1.reset_index(drop=True).iterrows():
+offsets = [
+    (6, 7),
+    (6, -12),
+    (6, 14),
+    (6, -18)
+]
+
+for i, row in plot1.iterrows():
 
     genus = str(row["Genus"])
-
-    offsets = [
-        (6, 7),
-        (6, -12),
-        (6, 14),
-        (6, -18)
-    ]
 
     dx, dy = offsets[i % len(offsets)]
 
@@ -145,10 +186,8 @@ ax.set_title(
     fontweight="bold"
 )
 
-ax.set_xlim(
-    max(70, plot1["Prevalence"].min() * 100 - 3),
-    101
-)
+# Show the full prevalence threshold and the observed data.
+ax.set_xlim(70, 101)
 
 ax.grid(
     axis="both",
@@ -186,7 +225,7 @@ da_plot = da_plot.dropna(
     ]
 )
 
-# Keep the strongest 20 genera for readable visualization
+# Keep the strongest 20 genera for readable visualization.
 da_plot = da_plot.sort_values(
     "max_abs_coef",
     ascending=True
@@ -201,7 +240,8 @@ bars = ax.barh(
     alpha=0.85
 )
 
-# Add coefficient and q-value
+
+# Add coefficient and q-value.
 for bar, (_, row) in zip(
     bars,
     da_plot.iterrows()
