@@ -23,7 +23,7 @@ The analysis is based on publicly available sequencing data from:
 - **Sequencing type:** paired-end ITS amplicon sequencing
 - **Public SRA records:** 198 runs
 
-The original study reported 3,387 fungal ASVs after DADA2 processing.
+The original study reported 3,387 fungal ASVs after DADA2 processing; this value is reported here as a study reference and was not independently regenerated in the current repository.
 
 ### Data sources
 
@@ -132,7 +132,17 @@ Examples include:
 The extracted differential-abundance summary is available in:
 
 `results/yeast_treatment_DA_summary_q05.csv`
+## Key findings
 
+The analysis highlights several patterns in the yeast-associated component of the honey bee hindgut microbiome:
+
+- Several yeast-associated ASVs showed high prevalence across the longitudinal dataset, with multiple taxa exceeding the 75% prevalence threshold.
+- Treatment-associated differential-abundance signals were detected for several yeast-associated genera and ASVs.
+- *Zygosaccharomyces*, *Metschnikowia*, *Candida*, *Hanseniaspora*, and *Kodamaea* were among the taxa showing treatment-associated signals.
+- The magnitude and direction of differential-abundance effects varied across treatment and timepoint comparisons.
+- Community-level analyses indicated that sampling timepoint explained a substantial component of fungal community variation.
+
+These findings should be interpreted as an exploratory re-analysis of publicly available data and supplementary results rather than as an independent replication of the complete original study.
 ## Key visualizations
 
 ### Yeast prevalence versus treatment responsiveness
