@@ -1,81 +1,207 @@
 # Honey Bee Hindgut Yeast Microbiome
 
-## Project goal
+Reproducible bioinformatics and microbial-ecology analysis of yeast-associated fungi in the honey bee (*Apis mellifera*) hindgut microbiome.
 
-A reproducible bioinformatics and microbial-ecology project using publicly available ITS amplicon sequencing data from a longitudinal *Apis mellifera* hindgut microbiome study.
+## Project overview
 
-**Research question:** How does probiotic delivery method influence the prevalence and treatment responsiveness of yeast-associated fungal taxa in the honey-bee hindgut?
+This project analyzes publicly available ITS amplicon sequencing data from a longitudinal study of the *Apis mellifera* hindgut microbiome.
+
+The main focus is on yeast-associated fungal taxa and their prevalence, community dynamics, and treatment responsiveness following probiotic delivery.
+
+## Research question
+
+How does probiotic delivery method influence the prevalence and treatment responsiveness of yeast-associated fungal taxa in the honey bee hindgut microbiome?
 
 ## Dataset
 
-- Study: Daisley et al., *The ISME Journal* (2023)
-- Article: "Delivery mechanism can enhance probiotic activity against honey bee pathogens"
-- ITS BioProject: **PRJNA856341**
-- Sequencing: Illumina MiSeq, paired-end
-- Public SRA records: 198 runs
-- Original study reported 3,387 fungal ASVs after DADA2 processing.
+The analysis is based on publicly available sequencing data from:
 
-Source article: https://doi.org/10.1038/s41396-023-01422-z
-SRA BioProject: https://www.ncbi.nlm.nih.gov/bioproject/PRJNA856341
-Original authors' code: https://github.com/bdaisley/LX3CA1
+- **Study:** Daisley et al., *The ISME Journal* (2023)
+- **Article:** "Delivery mechanism can enhance probiotic activity against honey bee pathogens"
+- **BioProject:** PRJNA856341
+- **Sequencing platform:** Illumina MiSeq
+- **Sequencing type:** paired-end ITS amplicon sequencing
+- **Public SRA records:** 198 runs
+
+The original study reported 3,387 fungal ASVs after DADA2 processing.
+
+### Data sources
+
+- SRA / BioProject: PRJNA856341
+- Original study: Daisley et al., 2023
+- Original authors' code and supplementary data are used where appropriate.
 
 ## Experimental design
 
-Groups:
-- NTC — no treatment control
-- PP — patty + LX3
-- PV — patty vehicle
-- SP — spray + LX3
-- SV — spray vehicle
+The longitudinal experiment contains five treatment groups:
 
-Timepoints:
-W0, W2, W4, W8, W12, W24
+| Group | Description |
+|---|---|
+| NTC | No treatment control |
+| PP | Patty + LX3 |
+| PV | Patty vehicle |
+| SP | Spray + LX3 |
+| SV | Spray vehicle |
 
-## Analyses completed
+Sampling timepoints:
 
-### 1. Raw-read quality control
-A representative SRA run, `SRR20011368` (NTC, W0), was inspected.
+**W0, W2, W4, W8, W12, W24**
+
+## Bioinformatics workflow
+
+The repository documents a reproducible analysis workflow including:
+
+1. Raw-read quality assessment
+2. ITS primer identification
+3. FASTQ handling
+4. DADA2 workflow design
+5. ASV-level fungal profiling
+6. Taxonomic filtering
+7. Yeast-associated ASV identification
+8. Prevalence analysis
+9. Differential-abundance result extraction
+10. Fungal alpha-diversity visualization
+11. Community-level variation analysis
+12. Automated figure generation
+
+## Quality control
+
+A representative SRA run, **SRR20011368**, was independently inspected.
+
+The run contained approximately:
 
 - 39,478 paired spots
 - R1 median length: ~243 bp
 - R2 median length: ~244 bp
-- Mean Phred quality: ~29.85 (R1), ~29.08 (R2)
+- Mean Phred quality: ~29.85 for R1
+- Mean Phred quality: ~29.08 for R2
 
-The SRA FASTQ was downloaded as an interleaved file and separated into matched R1/R2 files for inspection.
+The raw-read quality profile is available in:
 
-### 2. Primer identification
-The study used ITS1f/ITS2 primer constructs. In the representative run, the biological primer portions detected at the beginning of reads were approximately:
+`figures/SRR20011368_quality_profile.png`
 
-- Forward ITS1f: `GGCTTGGTCATTTAGAGGAAGTAA`
+## Primer identification
+
+The ITS1/ITS2 biological primer regions were inspected in the representative raw reads.
+
+Approximate biological primer sequences detected were:
+
+- Forward ITS1: `GGCTTGGT CATTTAGAGGAAGTAA`
 - Reverse ITS2: `CGGCTGCGTTCTTCATCGATGC`
 
-The full constructs, including barcode/adapter sequences, are documented in Supplementary Data 1B.
+The complete constructs and associated barcode/adapter sequences are documented separately in the supplementary data.
 
-### 3. Yeast prevalence
-From the authors' supplementary ASV table, 221 ASVs were classified as Saccharomycetes.
+## Yeast-associated taxa
 
-Using an operational threshold of >=75% prevalence, 15 yeast-associated ASVs were identified as highly prevalent.
+From the supplementary ASV table, **221 ASVs** were classified within *Saccharomycetes*.
 
-### 4. Treatment responsiveness
-Treatment-specific differential-abundance results were screened at q < 0.05.
+Using a prevalence threshold of **≥75%**, the analysis identified **15 highly prevalent yeast-associated ASVs**.
 
-The analysis distinguishes:
-- widespread/high-prevalence yeast-associated ASVs
-- lower-prevalence but treatment-responsive taxa
+Examples include taxa assigned to:
 
-Examples include *Hanseniaspora*, *Lachancea*, *Kodamaea*, *Candida*, *Metschnikowia* and *Zygosaccharomyces*.
+- *Hanseniaspora*
+- *Lachancea*
+- *Kodamaea*
+- *Candida*
+- *Metschnikowia*
+- *Zygosaccharomyces*
+- *Issatchenkia*
+
+The prevalence results are provided in:
+
+`results/core_yeast_ASVs_75pct.csv`
+
+## Treatment responsiveness
+
+Treatment-specific differential-abundance results were examined using a false-discovery threshold of:
+
+**q < 0.05**
+
+The analysis identifies yeast-associated taxa showing differential abundance across treatment/timepoint comparisons.
+
+Examples include:
+
+- *Zygosaccharomyces*
+- *Metschnikowia*
+- *Candida*
+- *Hanseniaspora*
+- *Kodamaea*
+- *Kurtzmaniella*
+- *Lachancea*
+
+The extracted differential-abundance summary is available in:
+
+`results/yeast_treatment_DA_summary_q05.csv`
+
+## Key visualizations
+
+### Yeast prevalence versus treatment responsiveness
+
+![Yeast prevalence versus treatment responsiveness](figures/honey_bee_yeast_prevalence_vs_response.png)
+
+This visualization highlights highly prevalent yeast-associated taxa and the number of significant ASV-level treatment comparisons associated with each genus.
+
+### Differential-abundance response
+
+![Differential-abundance response](figures/honey_bee_yeast_differential_abundance.png)
+
+This figure summarizes the maximum absolute differential-abundance coefficient observed for yeast-associated taxa with statistically significant treatment responses.
+
+## Community-level analyses
+
+Additional analyses include:
+
+- Observed fungal ASV richness
+- Chao1 richness
+- Shannon alpha diversity
+- PERMANOVA-based community variation
+- Yeast prevalence
+- Differential-abundance analysis
+
+Figures are available in the `figures/` directory.
 
 ## Important methodological note
 
-The current repository **does not claim that the complete 198-sample DADA2 pipeline was independently re-run here**.
+This repository distinguishes between independently performed analyses and results extracted from the original study.
 
-The raw-read QC and primer checks were independently performed on `SRR20011368`. The prevalence and differential-abundance results were independently extracted/reanalyzed from the authors' supplementary ASV and statistical tables.
+The representative raw-read QC and primer inspection were independently performed for **SRR20011368**.
 
-A full 198-sample DADA2 regeneration is provided as a reproducible R workflow in `scripts/02_dada2_ITS.R`, but should be executed in an R/Bioconductor environment before claiming a fully regenerated ASV table.
+The prevalence and differential-abundance analyses were independently extracted/reanalyzed from the authors' supplementary ASV and statistical tables.
 
-During the representative-read overlap check, only 17/39,478 pairs showed an exact overlap of at least 20 bp in the raw reads. After removing the biological primer portions, essentially no pairs retained a >=20-bp exact overlap. This is important for interpreting the DADA2 workflow: a standard overlap-based `mergePairs()` should not be assumed to succeed for this ITS dataset. The original paper states that forward and reverse reads were merged with DADA2, but the paper does not specify the exact merge setting in the methods. Therefore this repository does **not** claim a reproduced 198-sample DADA2 merge yet.
+The repository includes an R workflow for reproducing the DADA2 analysis:
 
-The next defensible step is to reproduce the authors' published pipeline as closely as possible, inspect the original command-line settings where available, and compare the resulting ASV count/sequence output with Supplementary Data 1C. If the workflow used DADA2 concatenation or another non-overlap strategy, that choice should be documented explicitly.
+`scripts/02_dada2_ITS.R`
+
+However, a complete independent regeneration of the original 198-sample ASV table should not be claimed until the exact original processing parameters and merge strategy have been reproduced and validated.
+
+## Reproducibility
+
+The repository is organized to support reproducible research.
+
+### Software
+
+- R
+- Bioconductor
+- DADA2
+- Python
+- pandas
+- NumPy
+- Matplotlib
+
+Dependencies are documented in:
+
+- `requirements.txt`
+- `R_packages.txt`
+
+### Automated figure generation
+
+Figure generation is automated through **GitHub Actions**.
+
+The workflow executes:
+
+`scripts/04_generate_yeast_figures.py`
+
+and generates the yeast-response visualizations from the repository data.
 
 ## Repository structure
 
@@ -83,44 +209,17 @@ The next defensible step is to reproduce the authors' published pipeline as clos
 honey-bee-yeast-microbiome/
 ├── data/
 │   ├── metadata/
-│   │   ├── SraRun_metadata.csv
-│   │   └── design_metadata_template.csv
 │   └── supplementary_results/
+├── docs/
 ├── figures/
 ├── results/
-│   ├── core_yeast_ASVs_75pct.csv
-│   └── yeast_treatment_DA_summary_q05.csv
 ├── scripts/
 │   ├── 01_raw_qc_notes.md
 │   ├── 02_dada2_ITS.R
-│   └── 03_yeast_prevalence_analysis.py
-├── docs/
-│   └── project_notes.md
-├── .gitignore
+│   ├── 03_yeast_prevalence_analysis.py
+│   └── 04_generate_yeast_figures.py
+├── CITATION.cff
 ├── LICENSE
-└── README.md
-```
-
-## Skills demonstrated
-
-- Amplicon sequencing QC
-- FASTQ handling
-- ITS primer identification
-- DADA2 workflow design
-- ASV-based microbial profiling
-- Taxonomic filtering
-- Prevalence analysis
-- Differential-abundance interpretation
-- Microbial ecology
-- Reproducible research
-- Python and R
-- Git/GitHub project organization
-
-## CV-ready description
-
-> **Honey Bee Hindgut Mycobiome — Bioinformatics Project**  
-> Analyzed publicly available ITS amplicon sequencing data from *Apis mellifera* hindgut samples. Performed raw-read QC, primer identification, ASV-level yeast prevalence analysis and treatment-response analysis, with emphasis on distinguishing widespread taxa from treatment-responsive yeasts. Developed a reproducible R/Python workflow for DADA2-based ITS processing and organized the analysis as a version-controlled GitHub project.
-
-## Citation
-
-Daisley BA et al. (2023). Delivery mechanism can enhance probiotic activity against honey bee pathogens. *The ISME Journal*, 17, 1382–1395. https://doi.org/10.1038/s41396-023-01422-z
+├── README.md
+├── R_packages.txt
+└── requirements.txt
